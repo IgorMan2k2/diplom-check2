@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <h1>WebSocket Example</h1>
+    <button id="sendButton">Send 1</button>
+    <div id="status"></div>
+    <div id="messages"></div>
+
+    <script>
+        // Создание WebSocket подключения
+        let ws = new WebSocket("ws://185.199.110.153:80");
+
+        // Элементы для отображения статуса и сообщений
+        let statusDiv = document.getElementById('status');
+        let messagesDiv = document.getElementById('messages');
+        let sendButton = document.getElementById('sendButton');
+
+        // Обработка событий WebSocket
+        ws.onopen = function(event) {
+            statusDiv.innerHTML = "Connected to WebSocket server.";
+        };
+
+        ws.onmessage = function(event) {
+            let message = document.createElement('p');
+            message.innerHTML = "Received: " + event.data;
+            messagesDiv.appendChild(message);
+        };
+
+        ws.onclose = function(event) {
+            statusDiv.innerHTML = "Disconnected from WebSocket server.";
+        };
+
+        ws.onerror = function(event) {
+            statusDiv.innerHTML = "Error: " + event;
+        };
+
+        // Отправка сообщения при нажатии кнопки
+        sendButton.onclick = function() {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send('1');
+                let message = document.createElement('p');
+                message.innerHTML = "Sent: 1";
+                messagesDiv.appendChild(message);
+            } else {
+                alert("WebSocket is not connected.");
+            }
+        };
+    </script>
+</body>
+</html>
